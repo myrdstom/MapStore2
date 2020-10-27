@@ -631,6 +631,14 @@
             }
           },
           {
+            "name": "Details",
+            "override": {
+              "Toolbar": {
+                "priority": 10
+              }
+            }
+          },
+          {
             "name": "Contexts",
             "cfg": {
               "mapsOptions": {
