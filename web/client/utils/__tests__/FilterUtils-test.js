@@ -1540,6 +1540,23 @@ describe('FilterUtils', () => {
         expect(filter.filterFields[2].groupId).toBe(filter.groupFields[3].id);
         expect(filter.filterFields[3].groupId).toBe(filter.groupFields[4].id);
     });
+
+    it('compose Multiple Attribute Filter', () => {
+        const filterA = {
+            "filterFields": [
+                {
+                    "attribute": "STATE_NAME",
+                    "rowId": 15454118,
+                    "operator": "ilike",
+                    "rawValue": "Alabama, Illinois",
+                    "value": "Alabama, Illinois",
+                    "type": "string"
+                }
+            ]
+        };
+        const filter = FilterUtils.composeMultipleAttributeFilters(filterA, "AND");
+        expect(filter).toExist();
+    });
     it('check CQL filter when logic is NOR', () => {
         const filterObject = {
             "groupFields": [

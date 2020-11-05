@@ -189,7 +189,8 @@ export const gridUpdateToQueryUpdate = ({attribute, operator, value, type} = {},
                 type,
                 groupId: 1,
                 operator,
-                value
+                value,
+                rawValue
 
             })
             : (oldFilterObj.filterFields || []).filter(field => field.attribute !== (attribute)),
