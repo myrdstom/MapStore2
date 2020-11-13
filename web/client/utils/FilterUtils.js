@@ -1007,6 +1007,57 @@ export const composeAttributeFilters = (filters, logic = "AND", spatialFieldOper
         });
     }, {groupFields: [rootGroup], filterFields: [], spatialField: []});
 };
+
+export const composeMultipleAttributeFilters = (filters, logic = "AND") =>{
+    const rootGroup = {
+        id: 1,
+        index: 0,
+        logic
+    };
+
+    let groupFieldArray = [];
+    let attributeObj = {};
+    let attributeValue = '';
+    let featureArray = [];
+    for (let element of filters.filterFields) {
+        if (attributeValue !== element.attribute) {
+            attributeValue = element.attribute;
+            let groupField = {
+                id: uuid(),
+                index: 0,
+                logic: "OR",
+                groupId: 1
+            };
+            groupFieldArray.push(groupField);
+            attributeObj[attributeValue] = groupField.id;
+        }
+    }
+    for (let obj of filters.filterFields) {
+        if (obj.rawValue.includes(',')) {
+            let valueString = obj.rawValue.split(",");
+            for (let element of valueString) {
+                featureArray.push({
+                    attribute: obj.attribute,
+                    rowId: obj.rowId,
+                    type: obj.type,
+                    operator: obj.operator,
+                    value: obj.type === 'number' ? Number(element) : element.toString(),
+                    rawValue: element
+                });
+            }
+        }
+    }
+    for (let element of featureArray) {
+        for (let char in attributeObj) {
+            if (element.attribute === char) {
+                element.groupId = attributeObj[char];
+            }
+        }
+    }
+    filters.filterFields = featureArray;
+    filters.groupFields = [rootGroup, ...groupFieldArray];
+    return filters;
+};
 /**
  @return a spatial filter with coordinates reprojected to nativeCrs
 */
